@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden; /* Empêche le défilement de la page entière */
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centre le contenu horizontalement */
+            justify-content: center; /* Centre le contenu verticalement */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        .message {
+            color: red;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            display: none; /* Masqué par défaut */
+        }
+        .modal {
+            display: none; /* Masqué par défaut */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #ffffff;
+            border-radius: 10px;
+            margin: 15% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .modal-button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .modal-button:hover {
+            background-color: #0056b3;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Statistiques</h1>
+
+    <div class="chart-container">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <div class="button-container">
+        <button class="button" onclick="openModal()">Récupérer</button>
+    </div>
+
+    <div class="message" id="error-message">
+        Solde insuffisant.
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <p>Pas encore éligible</p>
+        <button class="modal-button" onclick="closeModal()">OK</button>
+    </div>
+</div>
+
+<script>
+    // Création des données de statistiques initiales
+    const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
+    const dataPoints = [30, 50, 40, 60, 70, 90, 85]; // Valeurs initiales pour les données
+
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Progression (%)',
+            data: dataPoints,
+            borderColor: 'rgba(0, 123, 255, 1)', // Couleur de la ligne
+            backgroundColor: 'rgba(0, 123, 255, 0.2)', // Couleur de l'ombre de la ligne
+            borderWidth: 2,
+            fill: true
+        }]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Mois'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) { return value + '%'; } // Ajouter '%' aux valeurs
+                    },
+                    title: {
+                        display: true,
+                        text: 'Progression'
+                    }
+                }
+            },
+            animation: {
+                duration: 500, // Durée de l'animation
+                easing: 'linear' // Type d'animation
+            }
+        }
+    };
+
+    // Création du graphique
+    const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    );
+
+    // Fonction pour afficher le message d'erreur
+    function showMessage() {
+        document.getElementById('error-message').style.display = 'block';
+    }
+
+    // Fonction pour ouvrir la modale
+    function openModal() {
+        document.getElementById('myModal').style.display = 'flex';
+    }
+
+    // Fonction pour fermer la modale
+    function closeModal() {
+        document.getElementById('myModal').style.display = 'none';
+    }
+
+    // Fonction pour mettre à jour le graphique avec des données simulées
+    function updateChart() {
+        // Simulation de nouvelles données
+        const newDataPoints = dataPoints.map(point => point + Math.floor(Math.random() * 10 - 5));
+        data.datasets[0].data = newDataPoints;
+        myChart.update();
+    }
+
+    // Mise à jour du graphique toutes les secondes
+    setInterval(updateChart, 1000);
+
+</script>
+
+</body>
+</html>

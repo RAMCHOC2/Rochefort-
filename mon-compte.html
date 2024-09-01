@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Compte</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .header {
+            background-color: #ff5733;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .profile-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .profile-info img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+        .profile-info div {
+            flex-grow: 1;
+            margin-left: 20px;
+        }
+        .profile-info div p {
+            margin: 5px 0;
+        }
+        .balance-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .balance-box {
+            flex-basis: 30%;
+            background-color: #ff5733;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+        }
+        .actions-section {
+            display: flex;
+            flex-direction: column;
+        }
+        .action-button {
+            background-color: #ff5733;
+            color: white;
+            padding: 15px;
+            margin: 5px 0;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .action-button:hover {
+            background-color: #e04c2f;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="container">
+
+        <div class="profile-info">
+            <img src="https://via.placeholder.com/80" alt="Photo de profil">
+            <div>
+                <p><strong>Nom :</strong> <span id="userName">Nom ici</span></p>
+                <p><strong>Numéro de Téléphone :</strong> <span id="userPhone">Téléphone ici</span></p>
+            </div>
+        </div>
+
+        <div class="balance-section">
+            <div class="balance-box">
+                <p>Solde Principal</p>
+                <p><strong>10,000 FCFA</strong></p>
+            </div>
+            <div class="balance-box">
+                <p>Solde Dépôts</p>
+                <p><strong>5,000 FCFA</strong></p>
+            </div>
+            <div class="balance-box">
+                <p>Solde Retrait</p>
+                <p><strong>2,000 FCFA</strong></p>
+            </div>
+        </div>
+
+        <div class="actions-section">
+            <a href="#" class="action-button">Recharge</a>
+            <a href="#" class="action-button">Retrait</a>
+            <a href="#" class="action-button">Service Client</a>
+            <a href="#" class="action-button">Historique de Recharge</a>
+            <a href="#" class="action-button">Historique de Retrait</a>
+            <a href="#" class="action-button">Portefeuille </a>
+        </div>
+
+    </div>
+
+    <script>
+        // Récupérer les informations de l'utilisateur depuis localStorage
+        var storedName = localStorage.getItem('userName');
+        var storedPhone = localStorage.getItem('userPhone');
+
+        // Afficher les informations sur la page
+        document.getElementById('userName').textContent = storedName ? storedName : "Nom non renseigné";
+        document.getElementById('userPhone').textContent = storedPhone ? storedPhone : "Téléphone non renseigné";
+    </script>
+
+</body>
+</html>

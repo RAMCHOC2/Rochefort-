@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription et Connexion</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 350px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            display: none;
+        }
+        input {
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+        }
+        button {
+            padding: 12px;
+            margin-top: 15px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .toggle-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .toggle-btns button {
+            width: 48%;
+            background-color: #6c757d;
+        }
+        .toggle-btns button:hover {
+            background-color: #5a6268;
+        }
+        .active-btn {
+            background-color: #007bff !important;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="toggle-btns">
+        <button id="signupToggle" class="active-btn" onclick="showSignup()">Inscription</button>
+        <button id="loginToggle" onclick="showLogin()">Connexion</button>
+    </div>
+
+    <form id="signupForm">
+        <h2>Inscription</h2>
+        <input type="text" id="name" name="name" placeholder="Nom et prénom" required>
+        <input type="tel" id="phone" name="phone" placeholder="Numéro de téléphone" required>
+        <input type="password" id="password" name="password" placeholder="Mode de passe" required>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmer le mode de passe" required>
+        <input type="text" id="referralCode" name="referralCode" placeholder="Code de parrainage" required>
+        <button type="submit">S'inscrire</button>
+    </form>
+
+    <form id="loginForm">
+        <h2>Connexion</h2>
+        <input type="tel" id="loginPhone" name="phone" placeholder="Numéro de téléphone" required>
+        <input type="password" id="loginPassword" name="password" placeholder="Mode de passe" required>
+        <button type="submit">Se connecter</button>
+    </form>
+</div>
+
+<script>
+    // Affiche le formulaire d'inscription et masque le formulaire de connexion
+    function showSignup() {
+        document.getElementById('signupForm').style.display = 'block';
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('signupToggle').classList.add('active-btn');
+        document.getElementById('loginToggle').classList.remove('active-btn');
+    }
+
+    // Affiche le formulaire de connexion et masque le formulaire d'inscription
+    function showLogin() {
+        document.getElementById('signupForm').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('signupToggle').classList.remove('active-btn');
+        document.getElementById('loginToggle').classList.add('active-btn');
+    }
+
+    // Valide le code de parrainage
+    function validateReferralCode(code) {
+        var hasLetters = /[a-zA-Z]/.test(code);
+        var hasNumbers = /\d/.test(code);
+        return code.length >= 5 && hasLetters && hasNumbers;
+    }
+
+    // Gestion de la soumission du formulaire d'inscription
+    document.getElementById('signupForm').onsubmit = function(event) {
+        event.preventDefault();
+
+        var name = document.getElementById('name').value;
+        var phone = document.getElementById('phone').value;
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirmPassword').value;
+        var referralCode = document.getElementById('referralCode').value;
+
+        if (password !== confirmPassword) {
+            alert("Les mots de passe ne correspondent pas.");
+            return;
+        }
+
+        if (!validateReferralCode(referralCode)) {
+            alert("Le code de parrainage doit comporter au moins 5 caractères, avec des lettres et des chiffres.");
+            return;
+        }
+
+        // Stocke les informations dans le localStorage
+        localStorage.setItem('userName', name);
+        localStorage.setItem('userPhone', phone);
+        localStorage.setItem('userPassword', password);
+
+        window.location.href = 'identifiant.html?id=' + phone;
+    };
+
+    // Gestion de la soumission du formulaire de connexion
+    document.getElementById('loginForm').onsubmit = function(event) {
+        event.preventDefault();
+
+        var phone = document.getElementById('loginPhone').value;
+        var password = document.getElementById('loginPassword').value;
+
+        var storedPhone = localStorage.getItem('userPhone');
+        var storedPassword = localStorage.getItem('userPassword');
+
+        if (phone === storedPhone && password === storedPassword) {
+            window.location.href = 'identifiant.html?id=' + phone;
+        } else {
+            alert("Numéro de téléphone ou mot de passe incorrect.");
+        }
+    };
+
+    // Initialisation - affiche par défaut le formulaire d'inscription
+    showSignup();
+</script>
+
+</body>
+</html>
